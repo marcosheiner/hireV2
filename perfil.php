@@ -73,6 +73,7 @@
               <div>
                 <button class="btn btn-editar">Editar</button>
                 <button class="btn btn-editar">Meus Anuncios</button>
+                <a href="password_reset.php"><button class="btn btn-editar">Redefinir senha</button></a>
               </div>
             </div>
           </div>
