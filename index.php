@@ -1,8 +1,8 @@
 <?php
-  // Initialize sessions
+  
   session_start();
 
-  // Check if the user is already logged in, if yes then redirect him to welcome page
+  
   if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
     header("location: welcome.php");
     exit;
@@ -11,66 +11,66 @@
   // conexao do banco
   require_once "config/config.php";
 
-  // Define variables and initialize with empty values
+  
   $username = $password = '';
   $username_err = $password_err = '';
 
-  // Process submitted form data
+  
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Check if username is empty
+    
     if(empty(trim($_POST['username']))){
       $username_err = 'Insira um usuário.';
     } else{
       $username = trim($_POST['username']);
     }
 
-    // Check if password is empty
+    
     if(empty(trim($_POST['password']))){
       $password_err = 'Insira uma senha.';
     } else{
       $password = trim($_POST['password']);
     }
 
-    // Validate credentials
+    
     if (empty($username_err) && empty($password_err)) {
-      // Prepare a select statement
+      
       $sql = 'SELECT id, username, password FROM users WHERE username = ?';
 
       if ($stmt = $mysql_db->prepare($sql)) {
 
-        // Set parmater
+        
         $param_username = $username;
 
-        // Bind param to statement
+        
         $stmt->bind_param('s', $param_username);
 
-        // Attempt to execute
+        
         if ($stmt->execute()) {
 
-          // Store result
+          
           $stmt->store_result();
 
-          // Check if username exists. Verify user exists then verify
+          
           if ($stmt->num_rows == 1) {
-            // Bind result into variables
+            
             $stmt->bind_result($id, $username, $hashed_password);
 
             if ($stmt->fetch()) {
               if (password_verify($password, $hashed_password)) {
 
-                // Start a new session
+                
                 session_start();
 
-                // Store data in sessions
+                
                 $_SESSION['loggedin'] = true;
                 $_SESSION['id'] = $id;
                 $_SESSION['username'] = $username;
 
-                // Redirect to user to page
+                
                 header('location: welcome.php');
               } else {
-                // Display an error for passord mismatch
+                
                 $password_err = 'Senha Inválida.';
               }
             }
@@ -80,7 +80,7 @@
         } else {
           echo "Oops! Algo deu errado, por favor, tente de novo.";
         }
-        // Close statement
+        
         $stmt->close();
       }
 
